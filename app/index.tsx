@@ -1,34 +1,29 @@
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Image,
-  GestureResponderEvent,
-} from "react-native";
+import { View, Image } from "react-native";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import TextField from "../../components/Fields/TextField";
+import TextField from "@/components/Fields/TextField";
+import CustomPressable from "@/components/Layout/CustomPressable";
 
 export default function LoginScreen() {
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values);
-  };
-
   const validationSchema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("Obrigatório"),
     password: yup.string().trim().required("Obrigatório"),
   });
 
+  async function handleLogin(values: { email: string; password: string }) {
+    console.log(values);
+  }
+
   return (
     <>
       <Image
         source={require("@/assets/images/hard-working-team.png")}
-        className="h-[300px]"
+        className="!h-[300px]"
       />
       <Formik
+        validateOnMount={false}
         enableReinitialize
         initialValues={{
           email: "",
@@ -49,7 +44,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
             />
             <TextField
-              error={values.password}
+              error={errors.password}
               label="Senha"
               placeholder="Informe a sua senha"
               value={values.password}
@@ -59,7 +54,7 @@ export default function LoginScreen() {
               secureTextEntry
             />
             <div className="flex-grow" />
-            <Button title="Entrar" onPress={() => handleSubmit()} />
+            <CustomPressable onPress={() => handleSubmit()} label="Entrar" />
           </View>
         )}
       </Formik>
