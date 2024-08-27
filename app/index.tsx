@@ -5,6 +5,9 @@ import * as yup from "yup";
 
 import TextField from "@/components/Fields/TextField";
 import CustomPressable from "@/components/Layout/CustomPressable";
+import { asyncStoreData, asyncRemoveData } from "@/utils/localStorage";
+
+import { login } from "@/api/login";
 
 export default function LoginScreen() {
   const validationSchema = yup.object().shape({
@@ -13,7 +16,13 @@ export default function LoginScreen() {
   });
 
   async function handleLogin(values: { email: string; password: string }) {
-    console.log(values);
+    const request = await login(values);
+
+    if (!request.data.IsSuccess) {
+      await asyncRemoveData("user");
+    } else {
+      await asyncStoreData("user", JSON.stringify(request.data.Data));
+    }
   }
 
   return (
